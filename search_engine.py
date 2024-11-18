@@ -1,3 +1,5 @@
+import os
+
 # Henter hver ord og linje i en tekstfil, og setter det i en set i en liste, hvor den første verdien er linjenummeret, og den andre verdien er ordet
 def lesInnTekst(filnavn):
     reader = open(f"./txt/{filnavn}", "r")
@@ -76,8 +78,37 @@ def tellOrd(ord):
     else:
         print(f"Ordet '{ord}' kom aldri")
 
-lesInnTekst("tekstfil1.txt")
-printOrd("bruh")
-finnOrd("is")
-finnLinje("beautiful")
-tellOrd("is")
+# Spør brukeren om å velg hvilken tekstfil de vil søke fra
+def velgTxtFil():
+    if (os.path.exists("txt") == False or len(os.listdir("txt")) == 0):
+        print ("'txt' mappen finnes ikke eller er tom.")
+    else :
+        print("Velg .txt fil å søke fra:")
+        count = 0
+        filename_list = []
+        for filename in os.listdir('txt'):
+            if os.path.isfile("txt/" + filename):
+                count += 1
+                filename_list.append(filename)
+                print(f"{count}: {filename}")
+        while (True):
+            try:
+                answer = int(input("Velg et tall fra listen: "))
+                if (answer not in range(1, (len(filename_list) + 1))):
+                    print("Ugyldig svar")
+                    continue
+                else:
+                    break
+            except ValueError:
+                print("Ugyldig svar")
+                continue
+        global tekstfil
+        tekstfil = filename_list[(answer - 1)]
+        lesInnTekst(tekstfil)
+        hovedMeny()
+
+def hovedMeny():
+    while True:
+        print(f"Nåværende txt fil: {tekstfil}")
+
+velgTxtFil()
