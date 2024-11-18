@@ -1,4 +1,6 @@
 import os
+from colorama import Back, Fore
+import re
 
 # Henter hver ord og linje i en tekstfil, og setter det i en set i en liste, hvor den første verdien er linjenummeret, og den andre verdien er ordet
 def lesInnTekst(filnavn):
@@ -112,6 +114,20 @@ def velgTxtFil():
         lesInnTekst(tekstfil)
         hovedMeny()
 
+# Finner user input i txt filen og setter en hvit bakgrunn bak det
+def highlightSearch(ord):
+    reader = open(f"./txt/{tekstfil}", "r")
+
+    with reader as file:
+        file_content = file.read()
+        file_content = file_content.lower()
+
+    replaced = file_content.replace(ord, "{}{}{}".format(Back.WHITE + Fore.BLACK, ord, Back.RESET + Fore.RESET))
+    if (file_content == replaced):
+        print(f"Ordet '{ord}' finnes ikke i txt filen.")
+    else:
+        print("\n" + replaced)
+
 # Printer ut en hovedmeny hvor brukeren kan navigere rundt
 def hovedMeny():
     os.system("cls")
@@ -124,13 +140,14 @@ def hovedMeny():
         "| 4. Finn linje                              | \n"
         "| 5. Tell ord                                | \n"
         "| 6. Endre txt fil                           | \n"
-        "| 7. Avslutt                                 | \n"
+        "| 7. Highlight search                        | \n"
+        "| 8. Avslutt                                 | \n"
         "|--------------------------------------------| \n"
         )
     while (True):
         try:
             valg = int(input("Velg ett tall fra menyen: "))
-            if (valg not in range(1, 8)):
+            if (valg not in range(1, 9)):
                 print("Ugyldig svar")
                 continue
             else:
@@ -155,11 +172,12 @@ def hovedMeny():
     elif (valg == 6):
         velgTxtFil()
     elif (valg == 7):
+        ord = input("Hvilket ord eller bokstav vil du highlighte? ")
+        highlightSearch(ord)
+    elif (valg == 8):
         exit()
     
-    input("Trykk Enter for å gå videre. ")
+    input("\nTrykk Enter for å gå videre. ")
     hovedMeny()
-
-# TODO: Search query: highlight every place where the input is found
 
 velgTxtFil()
