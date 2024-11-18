@@ -12,6 +12,12 @@ def lesInnTekst(filnavn):
         for element in temp_list:
             list_set = set([line_number, element])
             list.append(list_set)
+    global list_lower
+    list_lower = []
+    for element in list:
+        for element2 in element:
+            if (isinstance(element2, str)):
+                list_lower.append(element2.lower())
     reader.close()
 
 # Skriver ut ordene i tekstfilen, med linjenummer ved siden av
@@ -21,12 +27,6 @@ def printTekst():
 # Leter etter ord i liste og printer ut ordet hvis den blir funnet
 def printOrd(ord):
     ord_lower = ord.lower()
-    global list_lower
-    list_lower = []
-    for element in list:
-        for element2 in element:
-            if (isinstance(element2, str)):
-                list_lower.append(element2.lower())
     try:
         list_lower.index(ord_lower)
         print(ord)
@@ -93,7 +93,7 @@ def velgTxtFil():
                 print(f"{count}: {filename}")
         while (True):
             try:
-                answer = int(input("Velg et tall fra listen: "))
+                answer = int(input("Velg ett tall fra listen: "))
                 if (answer not in range(1, (len(filename_list) + 1))):
                     print("Ugyldig svar")
                     continue
@@ -108,7 +108,50 @@ def velgTxtFil():
         hovedMeny()
 
 def hovedMeny():
-    while True:
-        print(f"Nåværende txt fil: {tekstfil}")
+    os.system("cls")
+    print(f"Nåværende txt fil: {tekstfil}")
+    print(
+        "|------------------Hovedmeny-----------------| \n"
+        "| 1. Print ut liste av ord i txt filen       | \n"
+        "| 2. Print ord                               | \n"
+        "| 3. Finn ord                                | \n"
+        "| 4. Finn linje                              | \n"
+        "| 5. Tell ord                                | \n"
+        "| 6. Endre txt fil                           | \n"
+        "| 7. Avslutt                                 | \n"
+        "|--------------------------------------------| \n"
+        )
+    while (True):
+        try:
+            valg = int(input("Velg ett tall fra menyen: "))
+            if (valg not in range(1, 8)):
+                print("Ugyldig svar")
+                continue
+            else:
+                break
+        except ValueError:
+            print("Ugyldig svar")
+    os.system("cls")
+    if (valg == 1):
+        printTekst()
+    elif (valg == 2):
+        ord = input("Skriv ord å printe ut: ")
+        printOrd(ord)
+    elif (valg == 3):
+        ord = input("Skriv et ord for å sjekke om det finnes: ")
+        finnOrd(ord)
+    elif (valg == 4):
+        ord = input("Skriv et ord å finne linjen til: ")
+        finnLinje(ord)
+    elif (valg == 5):
+        ord = input("Skriv et ord å telle: ")
+        tellOrd(ord)
+    elif (valg == 6):
+        velgTxtFil()
+    elif (valg == 7):
+        exit()
+    
+    input("Trykk Enter for å gå videre. ")
+    hovedMeny()
 
 velgTxtFil()
