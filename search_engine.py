@@ -22,7 +22,12 @@ def lesInnTekst(filnavn):
 
 # Skriver ut ordene i tekstfilen, med linjenummer ved siden av
 def printTekst():
-    print(list)
+    reader = open(f"./txt/{tekstfil}", "r")
+    count = 0
+    with reader as file:
+        for line in file:
+            count += 1
+            print(str(count) + ": " + line.rstrip())
 
 # Leter etter ord i liste og printer ut ordet hvis den blir funnet
 def printOrd(ord):
@@ -107,12 +112,13 @@ def velgTxtFil():
         lesInnTekst(tekstfil)
         hovedMeny()
 
+# Printer ut en hovedmeny hvor brukeren kan navigere rundt
 def hovedMeny():
     os.system("cls")
     print(f"Nåværende txt fil: {tekstfil}")
     print(
         "|------------------Hovedmeny-----------------| \n"
-        "| 1. Print ut liste av ord i txt filen       | \n"
+        "| 1. Print ut innhold i filen med linjenummer| \n"
         "| 2. Print ord                               | \n"
         "| 3. Finn ord                                | \n"
         "| 4. Finn linje                              | \n"
@@ -153,5 +159,7 @@ def hovedMeny():
     
     input("Trykk Enter for å gå videre. ")
     hovedMeny()
+
+# TODO: Search query like concat in sql, get the line with the query
 
 velgTxtFil()
