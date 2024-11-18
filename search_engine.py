@@ -160,6 +160,6 @@ def hovedMeny():
     input("Trykk Enter for å gå videre. ")
     hovedMeny()
 
-# TODO: Search query like concat in sql, get the line with the query
+# TODO: Search query: highlight every place where the input is found
 
 velgTxtFil()
