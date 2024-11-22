@@ -1,6 +1,5 @@
 import os
 from colorama import Back, Fore
-import re
 
 # Henter hver ord og linje i en tekstfil, og setter det i en set i en liste, hvor den første verdien er linjenummeret, og den andre verdien er ordet
 def lesInnTekst(filnavn):
@@ -9,11 +8,16 @@ def lesInnTekst(filnavn):
     global list
     list = []
     for line in reader:
+        # For hver linje i txt filen
         line_number += 1
+        # Lager en temporary liste som splitter opp alle ordene i linjen
         temp_list = line.split()
         for element in temp_list:
+            # Lag en set med ordet og linjenummeret ordet er på og set det i en liste
             list_set = set([line_number, element])
             list.append(list_set)
+    
+    # Lager en global liste med alle ordene i bare lowercase for å ikke ha problemer med case sensitivity
     global list_lower
     list_lower = []
     for element in list:
@@ -54,20 +58,26 @@ def finnLinje(ord):
     ord_lower = ord.lower()
     ord_funnet = False
     list_of_lines = []
+    # For hver set i liste
     for element in list:
+        # For hver verdi i set
         for element2 in element:
+            # Hvis verdien er en string, må det være ett ord
             if (isinstance(element2, str)):
                 set_ord = element2.lower()
                 if (set_ord == ord_lower):
                     ord_funnet = True
                     list_of_lines.append(line_number)
             else:
+                # Hvis det ikke er en string, må det være linjenummerets
                 line_number = element2
     if (ord_funnet == True):
+        # Hvis ordet var funnet
         print(f"Fant ordet '{ord}' i disse linjene:")
         for linje_nummer in list_of_lines:
             print(linje_nummer)
     else:
+        # Hvis ordet ikke var funnet
         print("Kunne ikke finne dette ordet.")
 
 # Teller antall ganger ett ord kommer opp i listen
@@ -75,24 +85,29 @@ def tellOrd(ord):
     count = 0
     ord_lower = ord.lower()
     for element in list_lower:
+        # for hvert ord i listen, hvis det ordet er lik ordet brukeren skrev in, legg til 1 på count
         if (element == ord_lower):
             count +=1
     if (count > 0):
+        # Hvis ordet kom opp ihvertfall 1 gang
         if (count == 1):
             print(f"Ordet '{ord}' kom opp 1 gang.")
         else :
             print(f"Ordet '{ord}' kom opp {count} ganger.")
     else:
+        # Hvis ordet aldre kom opp
         print(f"Ordet '{ord}' kom aldri")
 
 # Spør brukeren om å velg hvilken tekstfil de vil søke fra
 def velgTxtFil():
+    # Sjekker at txt mappen finnes og at noe er i mappen
     if (os.path.exists("txt") == False or len(os.listdir("txt")) == 0):
         print ("'txt' mappen finnes ikke eller er tom.")
     else :
         print("Velg .txt fil å søke fra:")
         count = 0
         filename_list = []
+        # For hver fil i txt mappen, assign et nummer til den filen
         for filename in os.listdir('txt'):
             if os.path.isfile("txt/" + filename):
                 count += 1
@@ -101,14 +116,17 @@ def velgTxtFil():
         while (True):
             try:
                 answer = int(input("Velg ett tall fra listen: "))
+                # Hvis svaret fra brukeren ikke er et tall som er knyttet til en fil
                 if (answer not in range(1, (len(filename_list) + 1))):
                     print("Ugyldig svar")
                     continue
                 else:
                     break
             except ValueError:
+                # Hvis svaret fra brukeren ikke er en integer
                 print("Ugyldig svar")
                 continue
+        # lager en global variabel som er navnet til tekstfilen
         global tekstfil
         tekstfil = filename_list[(answer - 1)]
         lesInnTekst(tekstfil)
@@ -121,8 +139,11 @@ def highlightSearch(ord):
     with reader as file:
         file_content = file.read()
         file_content = file_content.lower()
-
+    
+    # replacer alle ord i filen som er lik ordet brukeren skrev, med hvit bakgrunn og svart tekst
     replaced = file_content.replace(ord, "{}{}{}".format(Back.WHITE + Fore.BLACK, ord, Back.RESET + Fore.RESET))
+
+    # Hvis ingenting har blitt replaced, aka ordet ble ikke funnet
     if (file_content == replaced):
         print(f"Ordet '{ord}' finnes ikke i txt filen.")
     else:
@@ -180,4 +201,5 @@ def hovedMeny():
     input("\nTrykk Enter for å gå videre. ")
     hovedMeny()
 
+# Starter programmet ved å spørre bruker om å velge txt fil
 velgTxtFil()
